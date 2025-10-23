@@ -1,6 +1,6 @@
-# CMPT 433 Sample Assignment Build Structure
+# ENSC 351 Project Build Structure
 
-This is a working project that you can use as the basis for your assignments.
+This is a working project that you can use as the basis for the project.
 
 ## Sturcture
 
