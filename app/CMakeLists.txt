@@ -8,8 +8,8 @@ add_executable(out ${MY_SOURCES})
 target_link_libraries(out LINK_PRIVATE hal)
 
 # Copy executable to final location (change `hello_world` to project name as needed)
-add_custom_command(TARGET smart_alarm  POST_BUILD 
+add_custom_command(TARGET Smart-alarm-clock  POST_BUILD 
   COMMAND "${CMAKE_COMMAND}" -E copy 
-     "$<TARGET_FILE:hello_world>"
-     "~/cmpt433/public/myApps/hello_world" 
+     "$<TARGET_FILE:out>"
+     "${CMAKE_CURRENT_SOURCE_DIR}/Smart-alarm-clock" # puts the executable in the same directory as the project for now
   COMMENT "Copying ARM executable to public NFS directory")
