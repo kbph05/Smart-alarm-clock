@@ -10,14 +10,14 @@ struct gpiod_line_config *config;
 struct gpiod_request_config *req_cfg;
 struct gpiod_line_request *request;
 
-void LCD_init() {
+int initLCD(struct interface *i, const char *CHIPNAME) {
     chip = NULL;
     settings = NULL;
     config = NULL;
     req_cfg = NULL;
     request = NULL;
 
-    // 1. open the gpiochip0
+    // 1. open the gpiochip
     chip = gpiod_chip_open(CHIPNAME);
     if (chip == NULL){
         printf("%s", "[1602A] Cannot open the chip\n");
@@ -39,7 +39,7 @@ void LCD_init() {
         printf("%s", "[1602A] Cannot get line config");
         goto error;
     }
-    gpiod_line_config_add_line_settings(config, LINE_OFFSET, 2, settings);
+    gpiod_line_config_add_line_settings(config, LINE_OFFSETS, 8, settings);
 
 
     // 4. Create request config
@@ -48,7 +48,7 @@ void LCD_init() {
         printf("%s", "[1602A] Cannot get request config");
         goto error;
     }
-    gpiod_request_config_set_consumer(req_cfg, "encoder"); // myapp
+    gpiod_request_config_set_consumer(req_cfg, "myapp");
 
 
     // 5. Request the lines
@@ -58,7 +58,7 @@ void LCD_init() {
         goto error;
     }
 
-    printf("[1602A] Encoder initialized on GPIOs %u and %u\n", LINE_OFFSET[0], LINE_OFFSET[1]);
+printf("[1602A] Encoder initialized on GPIOs %u, %u, %u, %u, %u, %u, %u, %u\n", LINE_OFFSETS[0], LINE_OFFSETS[1], LINE_OFFSETS[2], LINE_OFFSETS[3], LINE_OFFSETS[4], LINE_OFFSETS[5], LINE_OFFSETS[6], LINE_OFFSETS[7]);
     return;
 
     error:
@@ -66,7 +66,7 @@ void LCD_init() {
         return;
 }
 
-int* LCD_read() {
+int* readLCD() {
     if (!request) return -1;
 
     int values[8];
@@ -78,7 +78,7 @@ int* LCD_read() {
     return values;
 }
 
-void LCD_cleanup() {
+void cleanLCD() {
 
     printf("clean_encoder() called — closing GPIO chip now\n");
 
@@ -105,7 +105,7 @@ void LCD_cleanup() {
     return;
 }
 
-void LCD_update(int* value) {
+void updateLCD(int pin, int value) {
 
     int ret = gpiod_line_request_set_values(request, value);
     if (ret < 0) {
