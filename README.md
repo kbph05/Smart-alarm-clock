@@ -1,3 +1,14 @@
+# Smart Alarm Clock - ENSC 351 Final Project
+
+This is a smart alarm clock that can gather weather updates, calendar events, message notifications.
+
+
+### Tools:
+
+The following tools are used to build:
+- BeagleBoard BeagleY-AI
+- 1602A LCD Display
+
 # ENSC 351 Project Build Structure
 
 This is a working project that you can use as the basis for the project.
