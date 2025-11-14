@@ -1,10 +1,10 @@
-// #include "HAL/1602A.h"
-// #include "HAL/encoder.h"
+#include "HAL/1602A.h"
+#include "HAL/encoder.h"
 // #include "HAL/neopixel.h"
 
 // #include "calendar.h"
 // #include "weather.h"
-// #include "clock.h"
+#include "clock.h"
 // #include "interface.h"
 
 // States
@@ -32,18 +32,32 @@ struct interface {
 
 int state = INITIALIZATION;
 
+void initInterface(struct interface* interface_p) {
+    Location_init(interface_p);
+    initClock(interface_p);
+    Weather_init(interface_p);
+}
+
+void updateTape(struct interface* interface_p) {
+    for (int j = 0; j < 8; j++) {
+        interface_p->ui_tape[j] = readLCD(j);
+    }
+}
+
 void main() { 
+    struct interface* interface_p = malloc(sizeof(struct interface));
     while (1) {
         switch (state) {
             case INITIALIZATION:
-                struct interface* interface_p = initInterface();
-                initLocation(interface_p);
-                initClock(interface_p);
-                initWeather(interface_p);
-                state = CLOCK;
+                // struct interface* interface_p;
+                if (interface_p != NULL) {
+                    initInterface(interface_p);
+                }
+                //initInterface(interface_p);
                 break;
             case CLOCK:
                 state = stateClock();
+                updateTape(interface_p);
                 break;
             case WEATHER:
                 state = stateWeather();
@@ -52,6 +66,7 @@ void main() {
                 state = stateSettings();
                 break;
             case EXIT:
+                free(interface_p);
                 exit(0);
                 break;
             default:
