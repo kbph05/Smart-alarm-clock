@@ -2,15 +2,8 @@
 
 #include "hal/1602A.h"
 
-unsigned int LINE_OFFSETS[] = {33, 41};
 
-struct gpiod_chip *chip;
-struct gpiod_line_settings *settings;
-struct gpiod_line_config *config;
-struct gpiod_request_config *req_cfg;
-struct gpiod_line_request *request;
-
-int initLCD(struct interface *i, const char *CHIPNAME) {
+void initLCD(struct interface *i, const char *CHIPNAME) {
     chip = NULL;
     settings = NULL;
     config = NULL;
@@ -66,7 +59,7 @@ printf("[1602A] Encoder initialized on GPIOs %u, %u, %u, %u, %u, %u, %u, %u\n", 
         return;
 }
 
-int* readLCD() {
+uint16_t readLCD() {
     if (!request) return -1;
 
     int values[8];
