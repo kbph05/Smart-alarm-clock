@@ -5,7 +5,7 @@ file(GLOB MY_SOURCES "src/*.c")
 add_executable(out ${MY_SOURCES})
 
 # Make use of the HAL library
-target_link_libraries(out LINK_PRIVATE hal)
+target_link_libraries(out LINK_PRIVATE HAL)
 
 # Copy executable to final location (change `hello_world` to project name as needed)
 add_custom_command(TARGET out POST_BUILD 
