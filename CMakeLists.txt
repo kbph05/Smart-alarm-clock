@@ -1,11 +1,39 @@
 # CMake Build Configuration for root of project
 cmake_minimum_required(VERSION 3.18)
 project(Smart-alarm-clock VERSION 1.0 DESCRIPTION "Final project for ENSC 351: Smart alarm clock " LANGUAGES C)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 
 # Compiler options (inherited by sub-folders)
 set(CMAKE_C_STANDARD 11)
 add_compile_options(-Wall -Werror -Wpedantic -Wextra)
 add_compile_options(-fdiagnostics-color)
+
+# Auto-detect toolchain
+if(NOT CMAKE_TOOLCHAIN_FILE AND NOT CMAKE_CROSSCOMPILING)
+    set(TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/aarch64-toolchain.cmake")
+    message(STATUS "Setting toolchain file to /aarch64-toolchain.cmake...")
+    if(EXISTS ${TOOLCHAIN_FILE})
+        message(STATUS "Auto-detecting toolchain file: ${TOOLCHAIN_FILE}")
+    else()
+        message(STATUS "No toolchain file found, using default compiler")
+    endif()
+endif()
+
+
+message(STATUS "Cross-compiling with sysroot: ${CMAKE_CROSSCOMPILING}")
+
+# Sysroot support
+if(CMAKE_CROSSCOMPILING AND DEFINED CMAKE_SYSROOT)
+    message(STATUS "Cross-compiling with sysroot: ${CMAKE_SYSROOT}")
+    set(ENV{PKG_CONFIG_SYSROOT_DIR} "~/ENSC_351/public/byai-sysroot")          
+    set(ENV{PKG_CONFIG_PATH} "~/ENSC_351/public/byai-sysroot/usr/pkgconfig")
+    set(CMAKE_FIND_ROOT_PATH ${CMAKE_SYSROOT})
+endif()
+
+    
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GPIOD REQUIRED libgpiod)
 
 # Enable address sanitizer
 # (Comment this out to make your code faster)
@@ -17,6 +45,11 @@ add_compile_options(-pthread)
 add_link_options(-pthread)
 
 # What folders to build
-add_subdirectory(HAL)  
-add_subdirectory(APP)
+add_subdirectory(hal)  
+add_subdirectory(app)
+
+# Print info about toolchain
+message(STATUS "System name: ${CMAKE_SYSTEM_NAME}")
+message(STATUS "System processor: ${CMAKE_SYSTEM_PROCESSOR}")
+message(STATUS "C compiler: ${CMAKE_C_COMPILER}")
 
