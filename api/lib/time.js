@@ -1,8 +1,11 @@
 /**
  * @file time.js
  * @brief The time module for the project. This module is responsible for getting the current time
- * from the IP API, or as a backup, the RTC on the Beagle-YAI. Currently it graps the time in 12 hour format, however
- * if we want to include AM/PM, we will need to change it back to 24 hour format.
+ * from the IP API, or as a backup, the RTC on the Beagle-YAI. It writes the time to the time.json file.
+ * 
+ * Currently it graps the time in 12 hour format, however if we want to include AM/PM, we will need to 
+ * change it back to 24 hour format.
+ * 
  */
 
 const { time } = require('console');
