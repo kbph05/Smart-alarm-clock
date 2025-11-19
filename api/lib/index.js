@@ -6,7 +6,7 @@ const { parseJSON } = require('./time');
 
 async function time() {
     try {
-        time = await getRTC();
+        time = await getAPI();
         parseJSON(time);
     } catch (error) {
         time = await getRTC();
