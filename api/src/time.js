@@ -20,7 +20,7 @@ async function getAPI() {
             throw new Error(`HTTP error - status: ${response.status}`);
         }
         const data = await response.json();
-        const now = new Date().toLocaleTimeString('en-US', {timeZone: data.timezone, hour12: false});
+        const now = new Date().toLocaleTimeString('en-US', {timeZone: data.timezone, hour12: false, dst: true});
 
         const timeAPI = {
             h : ((now.split(':')[0] > 12) ? now.split(':')[0] - 12 : now.split(':')[0]).toString(),
