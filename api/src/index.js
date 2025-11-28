@@ -7,6 +7,8 @@ import { parseJSON } from './time.js';
 import { getWeatherAPI } from './weather.js';
 import { weatherJSON } from './weather.js';
 import { getIP } from './weather.js';
+import { getCalendar } from './calendar.js';
+import { calendarJSON } from './calendar.js';
 
 async function time() {
     try {
@@ -30,5 +32,16 @@ async function weather() {
     }
 }
 
+async function calendar() {
+    try {
+        const calendar = await getCalendar();
+        calendarJSON(calendar);
+    } catch (error) {
+        console.error("Error fetching Google calendar data:", error);
+        return null;
+    }
+}
+
 time();
 weather();
+calendar();
