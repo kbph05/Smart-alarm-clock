@@ -8,24 +8,25 @@
  * 
  */
 
-const { time } = require('console');
-const { parse } = require('path');
+import * as fs from 'fs';
 
 
 // ------ Get the time using IP API to fetch timezone ------
-async function getAPI() {
+export async function getAPI() {
+
     try {
         const response = await fetch('http://ip-api.com/json/');
         if (!response.ok) {
-            throw new Error(`HTTP error - status: ${response.status}`);
+            throw new Error(`HTTP error: ${response.status}`);
         }
         const data = await response.json();
-        const now = new Date().toLocaleTimeString('en-US', {timeZone: data.timezone, hour12: false, dst: true});
+        const now = new Date().toLocaleTimeString('en-US', {timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, hour12: false, dst: true});
 
         const timeAPI = {
             h : ((now.split(':')[0] > 12) ? now.split(':')[0] - 12 : now.split(':')[0]).toString(),
             m : now.split(':')[1],
             s : now.split(':')[2],
+            ampm: now.split(':')[0] > 12 ? "PM" : "AM"
         }
         
         console.log(timeAPI);
@@ -38,7 +39,7 @@ async function getAPI() {
 }
 
 // ------ Fallback: Gets the RTC from the target ------
-function getRTC() {
+export function getRTC() {
 
     const now = new Date();
 
@@ -60,9 +61,8 @@ function getRTC() {
 }
 
 // ------ Writes the time to a JSON file ------
-async function parseJSON(t) {
+export async function parseJSON(t) {
     try {
-        const fs = require('fs');
         const json = JSON.stringify(t, null, 2);
         console.log(json);
         fs.writeFileSync('time.json', json);
@@ -72,9 +72,3 @@ async function parseJSON(t) {
         return null;
     }
 }
-
-module.exports = {
-    getRTC,
-    getAPI,
-    parseJSON
-};
