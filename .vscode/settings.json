@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "1602a.h": "c",
+        "stdint.h": "c",
+        "unistd.h": "c",
+        "i2c.h": "c",
+        "encoder.h": "c",
+        "clock.h": "c"
+    }
+}

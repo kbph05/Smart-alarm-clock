@@ -6,9 +6,12 @@
 */
 
 #include <stdlib.h>
+#include <stdint.h>
 
 #ifndef CLOCK_H
 #define CLOCK_H
+
+extern struct interface;
 
 /**
  * @brief Initializes the clock module. Sets up the display and RTC. 

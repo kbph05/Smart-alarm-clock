@@ -1,5 +1,4 @@
-#include "HAL/1602A.h"
-#include "HAL/encoder.h"
+#include "hal/encoder.h"
 // #include "HAL/neopixel.h"
 
 // #include "calendar.h"
