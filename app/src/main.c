@@ -1,76 +1,48 @@
+/*
+
+*/ 
+// Standard Libraries
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+#include <pthread.h>
+
+// #include <pthread.h>
+
+// Hardware Abstraction Layers
+#include "hal/spi.h"
 #include "hal/encoder.h"
-// #include "HAL/neopixel.h"
+#include "hal/i2c.h"
+#include "hal/customWait.h"
+#include "hal/SSD1780.h"
 
-// #include "calendar.h"
-// #include "weather.h"
-#include "clock.h"
-// #include "interface.h"
+// Additional Libraries
 
-// States
-#define EXIT -1
-#define INITIALIZATION 0
-#define CLOCK 1
-#define WEATHER 2
-#define SETTINGS 3
+#define i2c_node_address 0x3c
+// uint8_t data_buf[1025];
 
-// Types (later replaced by stdlib)
-typedef unsigned char uint8_t;
-typedef unsigned short uint16_t;
-typedef unsigned int uint32_t;
-typedef long long int uint64_t;
 
-// Vars
-struct interface {
-    uint64_t current_time;
-    uint16_t current_weather;
-    char* current_location[64];
-    uint16_t ui_tape[8];
+struct clock {
+    int hour;
+    int min;
 };
 
-// uint8_t ip[4];
-
-int state = INITIALIZATION;
-
-void initInterface(struct interface* interface_p) {
-    Location_init(interface_p);
-    initClock(interface_p);
-    Weather_init(interface_p);
+void dispClock(struct clock time) {
+    char* string = malloc(8*sizeof(char));
+    sprintf(string, "%02i:%02i", time.hour, time.min);
+    // memcpy(frame_buffer, interface_clock, 1024);
+    SSD1780_print2BufferLarge(1, string);
+    free(string);
 }
 
-void updateTape(struct interface* interface_p) {
-    for (int j = 0; j < 8; j++) {
-        interface_p->ui_tape[j] = readLCD(j);
-    }
-}
+int main() {   
+    // Setup
+    _i2c_init(1, i2c_node_address);
+    SSD1780_defaultConfig();
+    SSD1780_displayBuffer();
 
-void main() { 
-    struct interface* interface_p = malloc(sizeof(struct interface));
-    while (1) {
-        switch (state) {
-            case INITIALIZATION:
-                // struct interface* interface_p;
-                if (interface_p != NULL) {
-                    initInterface(interface_p);
-                }
-                //initInterface(interface_p);
-                break;
-            case CLOCK:
-                state = stateClock();
-                updateTape(interface_p);
-                break;
-            case WEATHER:
-                state = stateWeather();
-                break;
-            case SETTINGS:
-                state = stateSettings();
-                break;
-            case EXIT:
-                free(interface_p);
-                exit(0);
-                break;
-            default:
-                perror("State out of bound, exiting");
-                exit(-1);
-        }
-    }
+    _i2c_close();
+    return 0;
 }

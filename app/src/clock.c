@@ -3,9 +3,9 @@
 #include "stdint.h"
 
 
-
 int initClock(struct interface *i) {
-    return 0;
+
+    return i->current_time;
 }
 
 int stateClock() {

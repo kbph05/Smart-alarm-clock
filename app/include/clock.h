@@ -11,7 +11,12 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
-extern struct interface;
+struct interface {
+    uint64_t current_time;
+    uint16_t current_weather;
+    char* current_location[64];
+    uint16_t ui_tape[8];
+};
 
 /**
  * @brief Initializes the clock module. Sets up the display and RTC. 

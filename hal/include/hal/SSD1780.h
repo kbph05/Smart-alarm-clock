@@ -1,13 +1,7 @@
-/**
- * @file SS1780.h
- * @brief OLED module for the project. This module is responsible for controling the LCD.
-*/
+#ifndef __SSD1780_H__
+#define __SSD1780_H__
 
-#ifndef _SS1780_H_
-#define _SS1780_H_
-
-#include <stdint.h>
-#include "hal/i2c.h"
+#include <stdbool.h>
 
 #define SSD1780_MAX_WIDTH 128
 #define SSD1780_MAX_HEIGHT 64
@@ -64,8 +58,18 @@
 #define SSD1780_128_32_COLUMNS      128
 #define SSD1780_64_48_COLUMNS       64
 
-uint8_t ssd1780_init(uint8_t i2c_dev);
-uint8_t ssd1780_end();
-uint8_t ssd1780_test();
+extern uint8_t frame_buffer[1024];
+// extern uint8_t data_buf[1026];
+
+uint8_t SSD1780_init(uint8_t i2c_dev);
+uint8_t SSD1780_defaultConfig();
+uint8_t SSD1780_close();
+uint8_t SSD1780_clear();
+uint8_t SSD1780_invertDisplay();
+void SSD1780_print2Buffer(uint8_t line, char* message);
+void SSD1780_print2BufferLarge(uint8_t line, char* message);
+void SSD1780_putPixel2Buffer(uint8_t x, uint8_t y);
+
+void SSD1780_displayBuffer();
 
 #endif
