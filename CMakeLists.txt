@@ -4,7 +4,7 @@ project(Smart-alarm-clock VERSION 1.0 DESCRIPTION "Final project for ENSC 351: S
 
 # Compiler options (inherited by sub-folders)
 set(CMAKE_C_STANDARD 11)
-add_compile_options(-Wall -Werror -Wpedantic -Wextra)
+add_compile_options(-Wall -Werror -Wextra) #-Wpedantic removed for useage of 0b for binary numbers
 add_compile_options(-fdiagnostics-color)
 
 # Enable address sanitizer
