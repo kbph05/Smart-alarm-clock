@@ -289,7 +289,7 @@ void SSD1780_print2BufferLarge(uint8_t line, char* message) {
             frame_buffer[(8*xSkew+8)+1+line+(64*charColumn)] = part1;
             xSkew++;
         }  
-        xSkew += (part1 * 0);
+        xSkew -= 8; // fixes spacing
     }
 }
 

@@ -3,9 +3,15 @@
 #include "stdint.h"
 
 
-int initClock(struct interface *i) {
+rtc_t* initClock() {
+    rtc_t *clock = malloc(sizeof(rtc_t));
+    clock->hour = 0;
+    clock->min = 0; 
+    return clock;
+}
 
-    return i->current_time;
+void closeClock(rtc_t* clock) {
+    free(clock);
 }
 
 int stateClock() {

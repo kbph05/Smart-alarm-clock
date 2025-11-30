@@ -11,18 +11,25 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
-struct interface {
-    uint64_t current_time;
-    uint16_t current_weather;
-    char* current_location[64];
-    uint16_t ui_tape[8];
-};
+typedef struct {
+    int hour;
+    int min;
+    int date;
+    int day;
+    int year;
+} rtc_t;
 
 /**
- * @brief Initializes the clock module. Sets up the display and RTC. 
- * @param i Pointer to the interface structure.
+ * @brief Initializes the clock module. 
+ * @return Clock type structure.
  */
-int initClock(struct interface *i);
+rtc_t* initClock();
+
+/**
+ * @brief Closes the clock module, freeing memory. 
+ * @param Clock type structure.
+ */
+void closeClock(rtc_t* clock);
 
 /**
  * @brief Updates the display with the current time. 
