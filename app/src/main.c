@@ -19,13 +19,14 @@
 // Additional Libraries
 #include "clock.h"
 #include "weather.h"
+#include "calendar.h"
 
 
 
 #define i2c_node_address 0x3c
 // uint8_t data_buf[1025];
 
- 
+
 
 void dispClock(rtc_t* time) {
     char* string = malloc(8*sizeof(char));
@@ -43,7 +44,8 @@ int main() {
 
     // mains
     rtc_t* clock = initClock();
-    WeatherData* weather = initWeather();           // weather struct
+    WeatherData* weather = initWeather();       // weather struct
+    CalendarData* calendar = initCalendar();    // calendar struct
     dispClock(clock);
     SSD1780_print2Buffer(3, "Good Morning!");
 
@@ -59,7 +61,13 @@ int main() {
         clock->hour = tm.tm_hour;
         clock->min = tm.tm_min;
         dispClock(clock);
+
+        // get weather
         int state = stateWeather(weather);
+        Custom_wait(1000);
+
+        // get calendar
+        state = stateCalendar(calendar);
         Custom_wait(1000);
     }
 

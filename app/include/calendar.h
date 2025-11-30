@@ -16,7 +16,19 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-void Calendar_init();
+typedef struct {
+    char summary[256];
+    char start_date[20];
+    char end_date[20];
+} Event;
+
+typedef struct {
+    int *days;
+    int count;
+    Event *events;
+} CalendarData;
+
+CalendarData* initCalendar();
 int stateCalendar();
 
 #endif
