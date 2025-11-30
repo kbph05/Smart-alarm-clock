@@ -1,14 +1,9 @@
-
-
 #include "calendar.h"
-#include <stdio.h>
-#include <time.h>
-#include <string.h>
+
 
 
 CalendarData* initCalendar() {
     CalendarData* data = malloc(sizeof(CalendarData));
-    data->days = NULL;
     data->count = 0;
     data->events = malloc(sizeof(Event) * 500);
     return data;
@@ -41,7 +36,6 @@ int stateCalendar(CalendarData* data) {
         // Summary of the event
         char *s = strstr(line, "\"summary\":");
         if (s) {
-            // s += strlen("\"summary\":");
             s = strchr(s, ':') + 1;
             while (*s == ' ' || *s == '\"') s++;
             char *end = strchr(s, '\"');
@@ -50,15 +44,10 @@ int stateCalendar(CalendarData* data) {
             continue;
         }
 
-        // if (strstr(line, "start")) {
-        //     for (int i = 0; line[i]; i++) printf("%02X ", (unsigned char)line[i]);
-        //     printf("\n");
-        // }
-
         // Start date
         if (strstr(line, "\"start\":")) {
             in_start = 1;
-            continue;    // go to next line
+            continue;
         }
         if (in_start && strstr(line, "\"date\"")) {
             s = strchr(strstr(line, "\"date\""), ':');
@@ -80,7 +69,6 @@ int stateCalendar(CalendarData* data) {
         }
         if (in_end && strstr(line, "\"date\"")) {
             s = strchr(strstr(line, "\"date\""), ':');
-            // s = strchr(s, ':');
             if (s) {
                 s++;
                 while (*s == ' ' || *s == '\"') s++;

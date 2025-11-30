@@ -1,9 +1,5 @@
 #include "weather.h"
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
 
 WeatherData* initWeather() {
     WeatherData* data = malloc(sizeof(WeatherData));
@@ -16,8 +12,6 @@ int stateWeather(WeatherData* data) {
         
     FILE *f = fopen("/mnt/remote/myApps/json/weather.json", "r");
     char line[1024];
-    // double temperatures[200];
-    // int count = 0;
 
     int in_temperature_block = 0;
 
