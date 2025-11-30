@@ -75,7 +75,7 @@ export async function getWeatherAPI(lat, lon) {
 export function weatherJSON(data) {
     try {
         const json = JSON.stringify(data, null, 2);
-        fs.writeFileSync('weather.json', json);
+        fs.writeFileSync('/home/kbph/ENSC_351/public/myApps/weather.json', json);
     }
     catch (error) {
         console.error("Error writing to JSON file:", error);

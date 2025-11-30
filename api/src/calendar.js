@@ -47,7 +47,7 @@ export async function getCalendar() {
 export async function calendarJSON(data) {
     try {
         const json = JSON.stringify(data, null, 2);
-        fs.writeFileSync('calendar.json', json);
+        fs.writeFileSync('/home/kbph/ENSC_351/public/myApps/calendar.json', json);
     }
     catch (error) {
         console.error("Error writing to JSON file:", error);

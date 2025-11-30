@@ -9,6 +9,7 @@ import { weatherJSON } from './weather.js';
 import { getIP } from './weather.js';
 import { getCalendar } from './calendar.js';
 import { calendarJSON } from './calendar.js';
+import fetch from 'node-fetch';
 
 async function time() {
     try {
@@ -42,6 +43,19 @@ async function calendar() {
     }
 }
 
-time();
-weather();
-calendar();
+// time();
+// weather();
+// calendar();
+
+async function main() {
+    // Run on startup
+    await time();
+    await calendar();
+
+    // Fetch weather once per day
+    await weather();
+    setInterval(weather, 24 * 60 * 60 * 1000); // 24 hours
+    setInterval(calendar, 24 * 60 * 60 * 1000); // 24 hours
+}
+
+main();
