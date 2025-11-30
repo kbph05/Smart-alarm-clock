@@ -1,11 +1,18 @@
 
 #include "clock.h"
 #include "stdint.h"
+#include "stdio.h"
+#include "string.h"
 
+rtc_t* initClock() {
+    rtc_t *clock = malloc(sizeof(rtc_t));
+    clock->hour = 0;
+    clock->min = 0; 
+    return clock;
+}
 
-
-int initClock(struct interface *i) {
-    return 0;
+void closeClock(rtc_t* clock) {
+    free(clock);
 }
 
 int stateClock() {

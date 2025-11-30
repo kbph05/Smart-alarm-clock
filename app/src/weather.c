@@ -5,12 +5,14 @@
 #include <stdlib.h>
 
 
-void Weather_init(uint16_t *current_weather) {
-    printf("weather init %d\n", *current_weather);
-    return;
+WeatherData* initWeather() {
+    WeatherData* data = malloc(sizeof(WeatherData));
+    data->temps = malloc(sizeof(double) * 200);
+    data->count = 0;
+    return data;
 }
 
-int stateWeather() {
+int stateWeather(WeatherData* data) {
         
     FILE *f = fopen("/mnt/remote/myApps/weather.json", "r");
     char line[1024];
@@ -29,18 +31,20 @@ int stateWeather() {
             break;
         }
         if (in_temperature_block) {
-            double temp;
+            double temp = 0;
             if (sscanf(line, " \"%*d\": %lf,", &temp) == 1) {
-                temperatures[count++] = temp;
+                if (data->count < 200) {
+                    data->temps[data->count++] = temp;
+                }
             }
         }
     }
 
     fclose(f);
 
-    printf("Read %d hourly temperatures:\n", count);
-    for (int i = 0; i < count; i++) {
-        printf("Hour %d: %.2f °C\n", i, temperatures[i]);
+    printf("Read %d hourly temperatures:\n", data->count);
+    for (int i = 0; i < data->count; i++) {
+        printf("Hour %d: %.2f °C\n", i, data->temps[i]);
     }
 
     return 3;

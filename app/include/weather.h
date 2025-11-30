@@ -10,7 +10,14 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-void Weather_init(uint16_t *current_weather);
-int stateWeather();
+
+typedef struct {
+    double *temps;
+    int count;
+} WeatherData;
+
+
+WeatherData* initWeather();
+int stateWeather(WeatherData* data);
 
 #endif

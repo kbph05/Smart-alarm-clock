@@ -13,11 +13,13 @@ The following components are required for the project:
 
 ## Necessary dependencies:
 
+- Node.js (npm install)
 - openmeteo
 - googleapis
 - @google-cloud/local-auth
 - libjson-c-dev
 - CMake: `sudo apt update` and `sudo apt install cmake`
+- git clone https://github.com/armlabs/ssd1306_linux.git
 
 ## Running CMake
 
