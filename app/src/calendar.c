@@ -92,7 +92,7 @@ int stateCalendar(CalendarData* data) {
 
     printf("All events:\n");
     for (int i = 0; i < data->count; i++) {
-        printf("%s - Start: %s End: %s\n\n", data->events[i].summary, data->events[i].start_date, data->events[i].end_date);
+        printf("%s - Start: %s End: %s\n", data->events[i].summary, data->events[i].start_date, data->events[i].end_date);
     }
 
     return 1;
