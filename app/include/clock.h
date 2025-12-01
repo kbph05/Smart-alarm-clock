@@ -14,9 +14,11 @@
 typedef struct {
     int hour;
     int min;
-    int date;
     int day;
+    int month;
     int year;
+    int dotw; //day of the week
+    int isPm;
 } rtc_t;
 
 /**
