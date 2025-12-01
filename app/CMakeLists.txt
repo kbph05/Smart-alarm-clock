@@ -12,4 +12,7 @@ add_custom_command(TARGET out POST_BUILD
   COMMAND "${CMAKE_COMMAND}" -E copy 
      "$<TARGET_FILE:out>"
      "${CMAKE_CURRENT_SOURCE_DIR}/Smart-alarm-clock" # puts the executable in the same directory as the project for now
+  COMMAND "${CMAKE_COMMAND}" -E copy 
+     "$<TARGET_FILE:out>"
+     "~/ensc351/public/smart-alarm-clock" # puts ARM executable to public NFS directory
   COMMENT "Copying ARM executable to public NFS directory")
