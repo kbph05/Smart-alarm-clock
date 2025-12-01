@@ -7,8 +7,17 @@
 
 import { fetchWeatherApi } from "openmeteo";
 import * as fs from 'fs';
+import { loadCache, saveCache } from './cache.js';
+const cache = loadCache();
 
-export async function getIP() {
+function isToday(timestamp) {
+    if (!timestamp) return false;
+    const last = new Date(timestamp);
+    const now = new Date();
+    return last.toDateString() === now.toDateString();
+}
+
+async function getIP() {
     try {
         const response = await fetch('http://ip-api.com/json/');
         if (!response.ok) {
@@ -29,9 +38,8 @@ export async function getIP() {
     
 }
 
-
-// Credits from openmeteo for the template
-export async function getWeatherAPI(lat, lon) {
+// Credits to openmeteo for the template
+async function getWeatherAPI(lat, lon) {
     const params = {
         latitude: lat,
         longitude: lon,
@@ -72,10 +80,10 @@ export async function getWeatherAPI(lat, lon) {
 }
 
 
-export function weatherJSON(data) {
+function weatherJSON(data) {
     try {
         const json = JSON.stringify(data, null, 2);
-        fs.writeFileSync('weather.json', json);
+        fs.writeFileSync('/home/kbph/ENSC_351/public/myApps/json/weather.json', json);
     }
     catch (error) {
         console.error("Error writing to JSON file:", error);
@@ -83,20 +91,24 @@ export function weatherJSON(data) {
     }
 }
 
-// Weather code table:
-/**
- * Code	            Description
-    0	             Clear sky
-    1, 2, 3	         Mainly clear, partly cloudy, and overcast
-    45, 48	         Fog and depositing rime fog
-    51, 53, 55	     Drizzle: Light, moderate, and dense intensity
-    56, 57	         Freezing Drizzle: Light and dense intensity
-    61, 63, 65	     Rain: Slight, moderate and heavy intensity
-    66, 67	         Freezing Rain: Light and heavy intensity
-    71, 73, 75	     Snow fall: Slight, moderate, and heavy intensity
-    77	             Snow grains
-    80, 81, 82	     Rain showers: Slight, moderate, and violent
-    85, 86	         Snow showers slight and heavy
-    95 *	         Thunderstorm: Slight or moderate
-    96, 99 *	     Thunderstorm with slight and heavy hail
- */
+
+
+export async function checkIfWeatherIsFetched() {
+    if (isToday(cache.lastWeatherFetch)) {
+        console.log("Weather already fetched today.");
+        return;
+    }
+
+    try {
+        const ip = await getIP();
+        const weather = await getWeatherAPI(ip.latitude, ip.longitude);
+        weatherJSON(weather);
+
+        cache.lastWeatherFetch = new Date().toISOString();
+        saveCache(cache);
+
+        console.log("Weather fetched.");
+    } catch (e) {
+        console.error("Weather fetch failed:", e);
+    }
+}

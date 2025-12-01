@@ -65,7 +65,7 @@ export async function parseJSON(t) {
     try {
         const json = JSON.stringify(t, null, 2);
         console.log(json);
-        fs.writeFileSync('time.json', json);
+        fs.writeFileSync('/home/kbph/ENSC_351/public/myApps/json/time.json', json);
     }
     catch (error) {
         console.error("Error writing to JSON file:", error);

@@ -4,11 +4,9 @@
 import { getAPI } from './time.js';
 import { getRTC } from './time.js';
 import { parseJSON } from './time.js';
-import { getWeatherAPI } from './weather.js';
-import { weatherJSON } from './weather.js';
-import { getIP } from './weather.js';
-import { getCalendar } from './calendar.js';
-import { calendarJSON } from './calendar.js';
+import { checkIfCalendarIsFetched } from './calendar.js';
+import { checkIfWeatherIsFetched } from './weather.js';
+import fetch from 'node-fetch';
 
 async function time() {
     try {
@@ -21,27 +19,13 @@ async function time() {
     }
 }
 
-async function weather() {
-    try {
-        const ip = await getIP();
-        const weather = await getWeatherAPI(ip.latitude, ip.longitude);
-        weatherJSON(weather);
-    } catch (error) {
-        console.error("Error fetching weather data:", error);
-        return null;
-    }
+async function main() {
+
+    // await time();
+    await checkIfCalendarIsFetched();
+    await checkIfWeatherIsFetched();
+    setInterval(checkIfWeatherIsFetched, 24 * 60 * 60 * 1000); // check every day
+    setInterval(checkIfCalendarIsFetched, 24 *60 * 60 * 1000);  // check every day
 }
 
-async function calendar() {
-    try {
-        const calendar = await getCalendar();
-        calendarJSON(calendar);
-    } catch (error) {
-        console.error("Error fetching Google calendar data:", error);
-        return null;
-    }
-}
-
-time();
-weather();
-calendar();
+main();
