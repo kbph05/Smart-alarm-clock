@@ -13,7 +13,7 @@ import {authenticate} from '@google-cloud/local-auth';
 import {google} from 'googleapis';
 import * as fs from 'fs';
 import { loadCache, saveCache } from './cache.js';
-const cache = loadCache();
+import { wasFetchedToday, updateCacheTimestamp } from "./cache.js";
 
 function isToday(timestamp) {
     if (!timestamp) return false;
@@ -64,7 +64,7 @@ async function calendarJSON(data) {
 
 
 export async function checkIfCalendarIsFetched() {
-    if (isToday(cache.lastCalendarFetch)) {
+    if (wasFetchedToday("lastCalendarFetch")) {
         console.log("Calendar already fetched today.");
         return;
     }
@@ -73,9 +73,7 @@ export async function checkIfCalendarIsFetched() {
         const cal = await getCalendar();
         calendarJSON(cal);
 
-        cache.lastCalendarFetch = new Date().toISOString();
-        saveCache(cache);
-
+        updateCacheTimestamp("lastCalendarFetch");
         console.log("Calendar fetched.");
     } catch (e) {
         console.error("Calendar fetch failed:", e);

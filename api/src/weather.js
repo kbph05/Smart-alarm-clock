@@ -8,7 +8,7 @@
 import { fetchWeatherApi } from "openmeteo";
 import * as fs from 'fs';
 import { loadCache, saveCache } from './cache.js';
-const cache = loadCache();
+import { wasFetchedToday, updateCacheTimestamp } from "./cache.js";
 
 function isToday(timestamp) {
     if (!timestamp) return false;
@@ -91,10 +91,8 @@ function weatherJSON(data) {
     }
 }
 
-
-
 export async function checkIfWeatherIsFetched() {
-    if (isToday(cache.lastWeatherFetch)) {
+    if (wasFetchedToday("lastWeatherFetch")) {
         console.log("Weather already fetched today.");
         return;
     }
@@ -104,9 +102,7 @@ export async function checkIfWeatherIsFetched() {
         const weather = await getWeatherAPI(ip.latitude, ip.longitude);
         weatherJSON(weather);
 
-        cache.lastWeatherFetch = new Date().toISOString();
-        saveCache(cache);
-
+        updateCacheTimestamp("lastWeatherFetch");
         console.log("Weather fetched.");
     } catch (e) {
         console.error("Weather fetch failed:", e);
