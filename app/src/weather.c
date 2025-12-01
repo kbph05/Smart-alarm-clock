@@ -36,7 +36,7 @@ int stateWeather(WeatherData* data) {
     FILE *f = fopen("/mnt/remote/myApps/json/weather.json", "r");
     char line[1024];
 
-    int in_temperature_block = 0;
+    // int in_temperature_block = 0; // unused 
     int in_daily_temp_block = 0;
     int in_weather_code_block = 0;
     int temp_index = 0;
@@ -86,7 +86,7 @@ int stateWeather(WeatherData* data) {
     printf("\nDaily mean temperatures and Conditions:\n");
     int k = 1;
     for (int i = 0; i < data->count; i++) {
-        printf("Day %d: %.2f °C, code %d\n", k, data->daily[i].daily_temp, data->daily[i].conditions);
+        printf("Day %i: %.2f °C, code %.2f\n", k, data->daily[i].daily_temp, data->daily[i].conditions);
         k++;
     }
 

@@ -17,7 +17,7 @@ int stateCalendar(CalendarData* data) {
         return -1;
     }
 
-    Event events[500];
+    // Event events[500]; // unused
     char line[1024];
     int in_event = 0;
     int in_start = 0;
