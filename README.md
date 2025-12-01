@@ -13,13 +13,12 @@ The following components are required for the project:
 
 ## Necessary dependencies:
 
-- Node.js (npm install)
-- openmeteo
+- Node.js
+- openmeteo API
 - googleapis
 - @google-cloud/local-auth
-- libjson-c-dev
 - CMake: `sudo apt update` and `sudo apt install cmake`
-- git clone https://github.com/armlabs/ssd1306_linux.git
+- SSD1306 Linux Driver: https://github.com/armlabs/ssd1306_linux.git
 
 ## Running CMake
 
@@ -33,3 +32,7 @@ To manually run CMake from the command line use:
   # Build (compile & link) the project
   cmake --build build
 ```
+
+## Running the server
+
+Run the server using `node index.js` on the **host**. This will start fetching the weather and calendar every 24 hours.
