@@ -70,22 +70,15 @@ void dispClock(rtc_t* clock_m) {
     free(dateString);
 }
 
-void dispWeatherForcast(rtc_t* clock_m) {
+void dispWeatherForcast(rtc_t* clock_m, WeatherData* WeatherData_m) {
     SSD1780_clearBuffer();
     // uint8_t forcast[7] = {1, 2, 3, 4, 5, 6, 7};
     // int index = 0;
     
     // int condition[7] = {1, 2, 3, 4, 5, 6, 7};
-    int tempHigh[7] = {11, 22, 33, 44, 55, 66, 77};
-    int tempLow[7] = {00, 11, 22, 33, 44, 55, 66};
+    // int tempHigh[7] = {11, 22, 33, 44, 55, 66, 77};
+    // int tempLow[7] = {00, 11, 22, 33, 44, 55, 66};
 
-
-
-    // char* line3 = malloc(sizeof(char)*16);
-
-    // strcpy(line3, condition[dispDay]);
-    // SSD1780_print2Buffer(0, line3);
-    
     // for (int charColumn = 1; charColumn < 15; charColumn+=2) {
     //     for (int i = 1; i < 8; i++) { 
     //         if ((8*i+8)+1+(64*charColumn) > 1024) {
@@ -95,48 +88,47 @@ void dispWeatherForcast(rtc_t* clock_m) {
     //     }  
     //     index++;
     // }
+
     char* dotw[14] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"};
     int dayline = 2;
     int templine = 0;
-    char* temp = malloc(sizeof(char)*16);
+    char* meanTemp = malloc(sizeof(char)*16);
+    sprintf(meanTemp, " %05.2fC", WeatherData_m->daily[dispDay].daily_temp);
     switch (dispDay) {
         case 0:
             SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
-            sprintf(temp, " %02i:%02i", tempLow[dispDay], tempHigh[dispDay]);
-            SSD1780_print2Buffer(templine, temp);
+            SSD1780_print2Buffer(templine, meanTemp);
             break;
         case 1:
             SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
-            sprintf(temp, " %02i:%02i", tempLow[dispDay], tempHigh[dispDay]);
-            SSD1780_print2Buffer(templine, temp);
+            SSD1780_print2Buffer(templine, meanTemp);
             break;
         case 2:
             SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
-            sprintf(temp, " %02i:%02i", tempLow[dispDay], tempHigh[dispDay]);
-            SSD1780_print2Buffer(templine, temp);
+            SSD1780_print2Buffer(templine, meanTemp);
             break;
         case 3:
             SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
-            sprintf(temp, " %02i:%02i", tempLow[dispDay], tempHigh[dispDay]);
-            SSD1780_print2Buffer(templine, temp);
+            SSD1780_print2Buffer(templine, meanTemp);
             break;
         case 4:
             SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
-            sprintf(temp, " %02i:%02i", tempLow[dispDay], tempHigh[dispDay]);
-            SSD1780_print2Buffer(templine, temp);
+            SSD1780_print2Buffer(templine, meanTemp);
             break;
         case 5:
             SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
-            sprintf(temp, " %02i:%02i", tempLow[dispDay], tempHigh[dispDay]);
-            SSD1780_print2Buffer(templine, temp);
+            SSD1780_print2Buffer(templine, meanTemp);
             break;
         case 6:
             SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
-            sprintf(temp, " %02i:%02i", tempLow[dispDay], tempHigh[dispDay]);
-            SSD1780_print2Buffer(templine, temp);
+            SSD1780_print2Buffer(templine, meanTemp);
             break;
     }
     SSD1780_displayBuffer();
+}
+
+void dispCalendar() {
+
 }
 
 void* inputThread() {
@@ -171,8 +163,10 @@ int main() {
     _i2c_init(1, i2c_node_address);
     SSD1780_defaultConfig();
     rtc_t* clock_m = initClock();
-
     pthread_create(&encoder, NULL, inputThread, NULL);
+
+    WeatherData* weather_m = initWeather();
+    stateWeather(weather_m);
 
     while (1) {
         updateClock(clock_m);
@@ -181,7 +175,7 @@ int main() {
                 dispClock(clock_m);
                 break;
             case (1):
-                dispWeatherForcast(clock_m);
+                dispWeatherForcast(clock_m, weather_m);
                 break;
         }
     }
