@@ -40,6 +40,10 @@ int stateWeather(WeatherData* data) {
     int in_daily_temp_block = 0;
     int in_weather_code_block = 0;
     int temp_index = 0;
+    int max_index = 0;
+    int min_index = 0;
+    int in_daily_max_block = 0;
+    int in_daily_min_block = 0;
 
     
     while (fgets(line, sizeof(line), f)) {
@@ -59,6 +63,37 @@ int stateWeather(WeatherData* data) {
                 }
             }
         }
+
+        if (strstr(line, "\"temperature_2m_max")) {
+            in_daily_max_block = 1;
+        }
+        if (in_daily_max_block && strstr(line, "}")) {
+            in_daily_max_block = 0;
+        }
+        if (in_daily_temp_block) {
+            double daily_max = 0;
+            if (sscanf(line, " \"%*d\": %lf,", &daily_max) == 1) {
+                if (temp_index < 7) {
+                    data->daily[max_index++].daily_max = daily_max;
+                }
+            }
+        }
+
+        if (strstr(line, "\"temperature_2m_min")) {
+            in_daily_min_block = 1;
+        }
+        if (in_daily_min_block && strstr(line, "}")) {
+            in_daily_min_block = 0;
+        }
+        if (in_daily_temp_block) {
+            double daily_min = 0;
+            if (sscanf(line, " \"%*d\": %lf,", &daily_min) == 1) {
+                if (temp_index < 7) {
+                    data->daily[min_index++].daily_min = daily_min;
+                }
+            }
+        }
+        
 
         // Conditions 
         if (strstr(line, "\"weather_code\"")) {
