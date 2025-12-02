@@ -7,3 +7,4 @@ api/src/calendar.json
 api/src/weather.json
 api/src/time.json
 app/Smart-alarm-clock
+.vscode/settings.json
