@@ -109,8 +109,7 @@ void dispWeatherForcast(rtc_t* clock_m, WeatherData* WeatherData_m) {
 
 
 
-    // char* dotw[14] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-    char* dotw[7] = {"Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"};
+    char* dotw[14] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
     int dayline = 2;
     int condLine = 1;
     int templine = 0;
@@ -137,8 +136,7 @@ void dispWeatherForcast(rtc_t* clock_m, WeatherData* WeatherData_m) {
 
     sprintf(meanTemp, " %03.1fC   %03.1f:%03.1f", WeatherData_m->daily[dispDay].daily_temp, WeatherData_m->daily[dispDay].daily_min, WeatherData_m->daily[dispDay].daily_max);
     // sprintf(weatherCondition, "%s", weather_codes_m[(int)(WeatherData_m->daily->conditions)]);
-    // SSD1780_print2BufferLarge(dayline, dotw[(clock_m->dotw + dispDay) % 7]);
-    SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw]);
+    SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
     SSD1780_print2Buffer(condLine, weatherCondition);
     SSD1780_print2Buffer(templine, meanTemp);
 
