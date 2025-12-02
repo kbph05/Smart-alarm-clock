@@ -1,21 +1,8 @@
-/**
- * @file encoder.h
- * @brief The encoder module for the project. This module is responsible for handling inputs and
- * outputs from the encoder, which will control the display.
- */
-
-#ifndef ENCODER_H
-#define ENCODER_H
-
-#include "spi.h"
-#include "hal/customWait.h"
-#include "stdint.h"
-
-
-
+#ifndef _ENCODER_H_
+#define _ENCODER_H_
 
 // Returns direction of the encoder
-// -1: left, 0: NULL, 1: right
-int getEncoderInput();
+// -1: left, 0: NULL, 1: right, 3: left+click, -3: right+click
+int getEncoderInput(short chClick, short chLeft, short chRight);
 
 #endif

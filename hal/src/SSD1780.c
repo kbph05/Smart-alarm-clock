@@ -311,8 +311,9 @@ void SSD1780_displayBuffer() {
         data_buf[6] = frame_buffer[i+2];//frame_buffer_Test[i];
         data_buf[7] = frame_buffer[i+1];//frame_buffer_Test[i];
         data_buf[8] = frame_buffer[i];//frame_buffer_Test[i];
-        // Custom_wait(10);
-        // printf("i: %d\n", i);
         _i2c_write(data_buf, 9);
     }
+}
+void SSD1780_clearBuffer() {
+    memset(frame_buffer, 0x00, 1024);
 }
