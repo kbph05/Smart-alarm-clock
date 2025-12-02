@@ -40,6 +40,8 @@
 typedef struct {
     double daily_temp;
     double conditions;
+    double daily_max;
+    double daily_min;
 } Daily;
 
 typedef struct {
