@@ -74,7 +74,7 @@ void dispClock(rtc_t* clock_m) {
     char* timeString = malloc(8*sizeof(char));
     char* dateString = malloc(32*sizeof(char));
     sprintf(timeString, "%02i:%02i", clock_m->hour, clock_m->min);
-    sprintf(dateString, "%s %s %02i, %i", dotw[clock_m->dotw], month[clock_m->month], clock_m->day, clock_m->year);
+    sprintf(dateString, "%s %s %02i %i", dotw[clock_m->dotw], month[clock_m->month], clock_m->day, clock_m->year);
     if (clock_m->isPm) {
         strcat(timeString, "pm");
     } else {
@@ -109,14 +109,35 @@ void dispWeatherForcast(rtc_t* clock_m, WeatherData* WeatherData_m) {
 
 
 
-    char* dotw[14] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"};
+    char* dotw[14] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
     int dayline = 2;
+    int condLine = 1;
     int templine = 0;
     char* meanTemp = malloc(sizeof(char)*32);
-    // char* weatherCondition = malloc(sizeof(char)*32);
-    sprintf(meanTemp, " %05.2fC, %03.1f:%03.1f", WeatherData_m->daily[dispDay].daily_temp, WeatherData_m->daily[dispDay].daily_max, WeatherData_m->daily[dispDay].daily_min);
+    char* weatherCondition = malloc(sizeof(char)*32);
+
+    if (WeatherData_m->daily[dispDay].conditions == 0) {
+        sprintf(weatherCondition, "          Clear");
+    } else if (WeatherData_m->daily[dispDay].conditions == 45 || WeatherData_m->daily[dispDay].conditions == 48 || WeatherData_m->daily[dispDay].conditions == 1 || WeatherData_m->daily[dispDay].conditions == 2 || 
+        WeatherData_m->daily[dispDay].conditions == 3) {
+        sprintf(weatherCondition, "         Cloudy");
+    } else if (WeatherData_m->daily[dispDay].conditions == 51 || WeatherData_m->daily[dispDay].conditions == 53 || WeatherData_m->daily[dispDay].conditions == 55 
+        || WeatherData_m->daily[dispDay].conditions == 56 || WeatherData_m->daily[dispDay].conditions == 57 || WeatherData_m->daily[dispDay].conditions == 61 || WeatherData_m->daily[dispDay].conditions == 63 
+        || WeatherData_m->daily[dispDay].conditions == 65 || WeatherData_m->daily[dispDay].conditions == 66 || WeatherData_m->daily[dispDay].conditions == 67 || WeatherData_m->daily[dispDay].conditions == 80 
+        || WeatherData_m->daily[dispDay].conditions == 81 || WeatherData_m->daily[dispDay].conditions == 82) {
+        sprintf(weatherCondition, "          Rainy");
+    } else if (WeatherData_m->daily[dispDay].conditions == 71 || WeatherData_m->daily[dispDay].conditions == 73 || WeatherData_m->daily[dispDay].conditions == 75 || WeatherData_m->daily[dispDay].conditions == 77 || 
+        WeatherData_m->daily[dispDay].conditions == 85 || WeatherData_m->daily[dispDay].conditions == 86) {
+        sprintf(weatherCondition, "          Snowy");
+    } else {
+        sprintf(weatherCondition, "        Unknown");
+    }
+
+
+    sprintf(meanTemp, " %03.1fC   %03.1f:%03.1f", WeatherData_m->daily[dispDay].daily_temp, WeatherData_m->daily[dispDay].daily_min, WeatherData_m->daily[dispDay].daily_max);
     // sprintf(weatherCondition, "%s", weather_codes_m[(int)(WeatherData_m->daily->conditions)]);
-    SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
+    SSD1780_print2BufferLarge(dayline, dotw[(clock_m->dotw + dispDay) % 7]);
+    SSD1780_print2Buffer(condLine, weatherCondition);
     SSD1780_print2Buffer(templine, meanTemp);
 
     SSD1780_displayBuffer();
