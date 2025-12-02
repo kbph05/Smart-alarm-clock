@@ -64,31 +64,31 @@ int stateWeather(WeatherData* data) {
             }
         }
 
-        if (strstr(line, "\"temperature_2m_max")) {
+        if (strstr(line, "\"temperature_2m_max\"")) {
             in_daily_max_block = 1;
         }
         if (in_daily_max_block && strstr(line, "}")) {
             in_daily_max_block = 0;
         }
-        if (in_daily_temp_block) {
+        if (in_daily_max_block) {
             double daily_max = 0;
             if (sscanf(line, " \"%*d\": %lf,", &daily_max) == 1) {
-                if (temp_index < 7) {
+                if (max_index < 7) {
                     data->daily[max_index++].daily_max = daily_max;
                 }
             }
         }
 
-        if (strstr(line, "\"temperature_2m_min")) {
+        if (strstr(line, "\"temperature_2m_min\"")) {
             in_daily_min_block = 1;
         }
         if (in_daily_min_block && strstr(line, "}")) {
             in_daily_min_block = 0;
         }
-        if (in_daily_temp_block) {
+        if (in_daily_min_block) {
             double daily_min = 0;
             if (sscanf(line, " \"%*d\": %lf,", &daily_min) == 1) {
-                if (temp_index < 7) {
+                if (min_index < 7) {
                     data->daily[min_index++].daily_min = daily_min;
                 }
             }
@@ -121,7 +121,7 @@ int stateWeather(WeatherData* data) {
     printf("\nDaily mean temperatures and Conditions:\n");
     int k = 1;
     for (int i = 0; i < data->count; i++) {
-        printf("Day %i: %.2f °C, code %.2f\n", k, data->daily[i].daily_temp, data->daily[i].conditions);
+        printf("Day %i: %.2f °C, Max: %.2f °C, Min: %.2f °C, code %.2f\n", k, data->daily[i].daily_temp, data->daily[i].daily_max, data->daily[i].daily_min, data->daily[i].conditions);
         k++;
     }
 
