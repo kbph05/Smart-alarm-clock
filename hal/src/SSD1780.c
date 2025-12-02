@@ -240,7 +240,7 @@ void SSD1780_print2Buffer(uint8_t line, char* message) {
     }
     for (int charColumn = 0; charColumn < max; charColumn++) {
         for (int i = 0; i < 8; i++) { 
-            if ((8*i+8)+line+(64*charColumn) > (1024 - 16)) {
+            if ((8*i+8)+line+(64*charColumn) > (1024 - 8)) {
                 break;
             }
             // fixes special characters from overflowing

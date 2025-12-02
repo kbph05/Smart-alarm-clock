@@ -38,6 +38,18 @@ int calTimerT = 0;
 int calTimerB = 0;
 int maxEvents = 1;
 
+char *weather_codes_m[] = {
+    "clear-day",            // 0
+    "rain",                 // 61, 63, 65, 56, 57, 
+    "snow",
+    "sleet",
+    "wind",
+    "fog",
+    "cloudy",
+    "partly-cloudy-day",
+    "partly-cloudy-night"
+};
+
 #define DEBUG true
 
 // uint8_t time_FrameBuffer[1024];
@@ -95,41 +107,18 @@ void dispWeatherForcast(rtc_t* clock_m, WeatherData* WeatherData_m) {
     //     index++;
     // }
 
+
+
     char* dotw[14] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat"};
     int dayline = 2;
     int templine = 0;
-    char* meanTemp = malloc(sizeof(char)*16);
-    sprintf(meanTemp, " %05.2fC", WeatherData_m->daily[dispDay].daily_temp);
-    switch (dispDay) {
-        case 0:
-            SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
-            SSD1780_print2Buffer(templine, meanTemp);
-            break;
-        case 1:
-            SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
-            SSD1780_print2Buffer(templine, meanTemp);
-            break;
-        case 2:
-            SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
-            SSD1780_print2Buffer(templine, meanTemp);
-            break;
-        case 3:
-            SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
-            SSD1780_print2Buffer(templine, meanTemp);
-            break;
-        case 4:
-            SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
-            SSD1780_print2Buffer(templine, meanTemp);
-            break;
-        case 5:
-            SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
-            SSD1780_print2Buffer(templine, meanTemp);
-            break;
-        case 6:
-            SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
-            SSD1780_print2Buffer(templine, meanTemp);
-            break;
-    }
+    char* meanTemp = malloc(sizeof(char)*32);
+    // char* weatherCondition = malloc(sizeof(char)*32);
+    sprintf(meanTemp, " %05.2fC, %03.1f:%03.1f", WeatherData_m->daily[dispDay].daily_temp, WeatherData_m->daily[dispDay].daily_max, WeatherData_m->daily[dispDay].daily_min);
+    // sprintf(weatherCondition, "%s", weather_codes_m[(int)(WeatherData_m->daily->conditions)]);
+    SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
+    SSD1780_print2Buffer(templine, meanTemp);
+
     SSD1780_displayBuffer();
 }
 
