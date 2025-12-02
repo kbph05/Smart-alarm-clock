@@ -28,9 +28,15 @@
 
 // Threads
 pthread_t encoder;
-const int MAX_TAB = 1;
-int cur_tab = 0;
+const int MAX_TAB = 2;
+int currTab = 0;
+int currEvent = 0;
 int dispDay = 0;
+int calRotationT = 0;
+int calRotationB = 0;
+int calTimerT = 0;
+int calTimerB = 0;
+int maxEvents = 1;
 
 #define DEBUG true
 
@@ -127,8 +133,47 @@ void dispWeatherForcast(rtc_t* clock_m, WeatherData* WeatherData_m) {
     SSD1780_displayBuffer();
 }
 
-void dispCalendar() {
+void dispCalendar(CalendarData* calendar_m) {
+    SSD1780_clearBuffer();
+    // char* line = malloc(sizeof(char)*256);
+    // strncpy(line, calendar_m->events[0].summary, 15);
+    // sprintf(line, "%s", calendar_m->events[0].summary);
+    // SSD1780_print2Buffer(2, line);
+    // char* line3 = malloc(sizeof(char)*16);
+    // sprintf
+    int eventTopMax = strlen(calendar_m->events[currEvent].summary) - 16;
+    int eventBottomMax = strlen(calendar_m->events[currEvent+1].summary) - 16;
 
+    if (calTimerT > 10) {
+        calRotationT++;
+    }
+    if (calTimerB > 10) {
+        calRotationB++;
+    }
+
+    if (calRotationT > eventTopMax && calTimerT > 0) {
+        calTimerT = -10;
+    }
+    if (calRotationB > eventBottomMax && calTimerB > 0) {
+        calTimerB = -10;
+    }
+
+    if (calTimerT == -1) {
+        calRotationT = 0;
+    }
+    if (calTimerB == -1) {
+        calRotationB = 0;
+    }
+
+    SSD1780_print2Buffer(3, calendar_m->events[currEvent].start_date);
+    SSD1780_print2Buffer(2, calendar_m->events[currEvent].summary+calRotationT);
+    SSD1780_print2Buffer(1, calendar_m->events[currEvent+1].start_date);
+    SSD1780_print2Buffer(0, calendar_m->events[currEvent+1].summary+calRotationB);
+    SSD1780_displayBuffer();
+
+    Custom_wait(100);
+    calTimerT++;
+    calTimerB++;
 }
 
 void* inputThread() {
@@ -138,10 +183,10 @@ void* inputThread() {
         input = getEncoderInput(3, 4, 5);
         // switching tabs
         if (input == 3) {
-            if (cur_tab == MAX_TAB) {
-                cur_tab = 0;
+            if (currTab == MAX_TAB) {
+                currTab = 0;
             } else {
-                cur_tab++;                
+                currTab++;                
             }
             // wait until not pressed
             while (getEncoderInput(3, 4, 5)) {
@@ -149,10 +194,14 @@ void* inputThread() {
             }
         }
         // changing day
-        if (input == -1 && dispDay != 0 && cur_tab == 1) {
+        if (input == -1 && dispDay != 0 && currTab == 1) {
             dispDay--;
-        } else if (input == 1 && dispDay != 6 && cur_tab == 1) {
+        } else if (input == 1 && dispDay != 6 && currTab == 1) {
             dispDay++;
+        } else if (input == -1 && currEvent != 0 && currTab == 2) {
+            currEvent--;
+        } else if (input == 1 && (currEvent + 1) != maxEvents && currTab == 2) {
+            currEvent++;
         }
     }
 
@@ -162,20 +211,30 @@ int main() {
     // Setup
     _i2c_init(1, i2c_node_address);
     SSD1780_defaultConfig();
+
+
+
     rtc_t* clock_m = initClock();
     pthread_create(&encoder, NULL, inputThread, NULL);
 
     WeatherData* weather_m = initWeather();
     stateWeather(weather_m);
 
+    CalendarData* calendar_m = initCalendar();
+    stateCalendar(calendar_m);
+    maxEvents = 10;//calendar_m->count;
+
     while (1) {
         updateClock(clock_m);
-        switch (cur_tab) {
+        switch (currTab) {
             case (0):
                 dispClock(clock_m);
                 break;
             case (1):
                 dispWeatherForcast(clock_m, weather_m);
+                break;
+            case (2):
+                dispCalendar(calendar_m);
                 break;
         }
     }
