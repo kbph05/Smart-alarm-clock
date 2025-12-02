@@ -134,7 +134,7 @@ void dispWeatherForcast(rtc_t* clock_m, WeatherData* WeatherData_m) {
     }
 
 
-    sprintf(meanTemp, " %03.1fC   %03.1f:%03.1f", WeatherData_m->daily[dispDay].daily_temp, WeatherData_m->daily[dispDay].daily_min, WeatherData_m->daily[dispDay].daily_max);
+    sprintf(meanTemp, "  %03.1fC  %03.1f:%03.1f", WeatherData_m->daily[dispDay].daily_temp, WeatherData_m->daily[dispDay].daily_min, WeatherData_m->daily[dispDay].daily_max);
     // sprintf(weatherCondition, "%s", weather_codes_m[(int)(WeatherData_m->daily->conditions)]);
     SSD1780_print2BufferLarge(dayline, dotw[clock_m->dotw+dispDay]);
     SSD1780_print2Buffer(condLine, weatherCondition);
