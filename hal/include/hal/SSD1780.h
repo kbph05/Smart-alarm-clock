@@ -71,5 +71,6 @@ void SSD1780_print2BufferLarge(uint8_t line, char* message);
 void SSD1780_putPixel2Buffer(uint8_t x, uint8_t y);
 
 void SSD1780_displayBuffer();
+void SSD1780_clearBuffer();
 
 #endif

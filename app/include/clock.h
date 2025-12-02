@@ -34,6 +34,12 @@ rtc_t* initClock();
 void closeClock(rtc_t* clock);
 
 /**
+ * @brief Updates clock structure from time module. 
+ * @param Clock type structure.
+ */
+void updateClock(rtc_t* clock);
+
+/**
  * @brief Updates the display with the current time. 
  * @return The next state of the state machine.
  */

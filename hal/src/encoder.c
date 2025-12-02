@@ -1,17 +1,26 @@
-#define _GNU_SOURCE
+#include "hal/spi.h"
+#include "hal/customWait.h"
 
-#include "hal/encoder.h"
-
-int getEncoderInput() {
-    if (spiRead(1, 250000) - spiRead(2, 250000) > 1000) {
-        while (spiRead(2, 250000) != 0 || spiRead(1, 250000) != 0) {}
+static short C = 0;
+// static short A = 0;
+// static short B = 0;
+// static short pA = 0;
+// static short pB = 0;
+// static short input = 0;
+// static short state = 0;
+int getEncoderInput(short chClick, short chLeft, short chRight) {
+    C = spiRead(chClick, 250000) > 2000;
+    if (spiRead(chLeft, 250000) - spiRead(chRight, 250000) > 2000) {
+        while (spiRead(chRight, 250000) != 0 || spiRead(chLeft, 250000) != 0) {}
         Custom_wait(100);
-        return 1;
+        return 1 + (C << 1); // 1: left, 3: left+click
     } 
-    else if (spiRead(1, 250000) - spiRead(2, 250000) < -1000) {
-        while (spiRead(1, 250000) != 0 || spiRead(2, 250000) != 0) {}
+    else if (spiRead(chLeft, 250000) - spiRead(chRight, 250000) < -2000) {
+        while (spiRead(chLeft, 250000) != 0 || spiRead(chRight, 250000) != 0) {}
         Custom_wait(100);
-        return -1;
+        return -1 - (C << 1); // -1: right, -3: right+click
     }
-    return 0;
+    else {
+        return 0 + C*3;
+    }
 }

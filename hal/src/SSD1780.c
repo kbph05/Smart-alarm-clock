@@ -240,10 +240,13 @@ void SSD1780_print2Buffer(uint8_t line, char* message) {
     }
     for (int charColumn = 0; charColumn < max; charColumn++) {
         for (int i = 0; i < 8; i++) { 
-            if ((8*i+8)+line+(64*charColumn) > 1024) {
+            if ((8*i+8)+line+(64*charColumn) > (1024 - 8)) {
                 break;
             }
-            frame_buffer[(8*i+8)+line+(64*charColumn)] = font8x8[8*(message[charColumn]-32)+i];
+            // fixes special characters from overflowing
+            if ((8*(message[charColumn]-32)+i) < 760 || (((8*i+8)+line+(64*charColumn)) > 1024)) {
+                frame_buffer[(8*i+8)+line+(64*charColumn)] = font8x8[8*(message[charColumn]-32)+i];
+            } 
         }  
     }
 }
@@ -311,8 +314,9 @@ void SSD1780_displayBuffer() {
         data_buf[6] = frame_buffer[i+2];//frame_buffer_Test[i];
         data_buf[7] = frame_buffer[i+1];//frame_buffer_Test[i];
         data_buf[8] = frame_buffer[i];//frame_buffer_Test[i];
-        // Custom_wait(10);
-        // printf("i: %d\n", i);
         _i2c_write(data_buf, 9);
     }
+}
+void SSD1780_clearBuffer() {
+    memset(frame_buffer, 0x00, 1024);
 }
